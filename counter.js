@@ -1,17 +1,13 @@
 function counter(currentState, action) {
-    console.log('counter, currentState ' + currentState.count + ', action' + action.type);
-    var newState = { count: currentState.count };
+    console.log('currentState ' + currentState.fibbonaci + ', action' + action.type);
+    var newState = { fibbonaci: currentState.fibbonaci, index: currentState.index };
     switch(action.type) {
-        case 'ADD':
-            newState = { count: currentState.count + 1 };
-            return newState;
-        break;
-        case 'MINUS':
-            newState = { count: currentState.count - 1 };
+        case 'NEXT':
+            newState = { fibbonaci: getFibbonaci(currentState.index + 1), index: currentState.index + 1 };
             return newState;
         break;
         case 'RESET':
-            newState = { count: 0 };
+            newState = { fibbonaci: 0, index: 0 };
             return newState;
         break;
         default:
@@ -19,34 +15,47 @@ function counter(currentState, action) {
     }
 }
 
-var state = { count: 0 };
+var state = { fibbonaci: 0, index: 0 };
 var store = Redux.createStore(counter, state);
 
-document.getElementById('add')
+document.getElementById('next')
         .addEventListener('click', function(){
-            var addAction = { type: "ADD" };
-            console.log('ADD ' + addAction);
+            var addAction = { type: "NEXT" };
+            console.log(addAction.type);
             store.dispatch(addAction);
-        });
-
-document.getElementById('minus')
-        .addEventListener('click', function(){
-            var minusAction = { type: "MINUS" };
-            console.log('MINUS ' + minusAction);
-            store.dispatch(minusAction);            
         });
 
 document.getElementById('reset')
         .addEventListener('click', function(){
             var resetAction = { type: "RESET" };
-            console.log('RESET ' + resetAction);
+            console.log(resetAction.type);
             store.dispatch(resetAction);            
         });
 
 function updateView() {
-    console.log('update view ' + store.getState().count);
-    document.getElementById('counter')
-            .innerHTML = store.getState().count.toString();
+    console.log(store.getState().fibbonaci);
+    document.getElementById('fibbonaci')
+            .innerHTML = store.getState().fibbonaci.toString();
 }
 
 store.subscribe(updateView);
+
+function getFibbonaci(index) {
+    if (index === 0) {
+        return 0;
+    } else if (index === 1) {
+        return 1;
+    }        
+
+    let first = 0;
+    let second = 1;
+    let sum = 1;
+
+    for(let i=2; i<=index; ++i) {
+        sum = first + second;
+        first = second;
+        second = sum;
+    }
+
+    return sum;
+}
