@@ -36,6 +36,9 @@ function updateView() {
     console.log(store.getState().fibbonaci);
     document.getElementById('fibbonaci')
             .innerHTML = store.getState().fibbonaci.toString();
+
+    document.getElementById('index')
+            .innerHTML = store.getState().index.toString();        
 }
 
 store.subscribe(updateView);
